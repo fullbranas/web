@@ -61,7 +61,14 @@
                 <div class="w-100 app__card">
                     <h2 class="app__card-title">domains ({{ domains.length }})</h2>
                     <ul class="card app__list">
-                        <li v-for="domain in domains" v-bind:key="domain" class="card"><span class="card-body">{{ domain }}</span></li>
+                        <li v-for="domain in domains" v-bind:key="domain.name" class="card">
+                            <span class="card-body app__item">
+                                {{ domain.name }}
+                                <a v-bind:href="domain.link" target="_blank" class="btn btn-info" aria-label="shopping">
+                                    <i aria-hidden="true" class="fa fa-shopping-cart"></i>
+                                </a>
+                            </span>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -105,7 +112,12 @@ export default {
             for(const index in this.prefixes){
                 const prefix = this.prefixes[index];
 
-                this.sufixes.forEach(sufix => domains.push(`${prefix}${sufix}`));
+                this.sufixes.forEach(sufix => {
+                    const name = `${prefix}${sufix}`;
+                    const link = `https://checkout.hostgator.com.br/?a=add&sld=${name}&tld=.com.br&domaincycle=1&pid=5&billingcycle=annually&promocode=PRATODAHORA35HG&titan=1&titanSource=1`;
+
+                    domains.push({ name, link });
+                });
             }
 
             return domains;
