@@ -80,13 +80,9 @@ export default {
             prefix: "",
             sufix: "",
 			prefixes: ["air", "light"],
-			sufixes: ["car", "ball"],
-			domains: []
+			sufixes: ["car", "ball"]
 		};
 	},
-    created(){
-        this.generate();
-    },
 	methods: {
 		add(event, list, name){
             event.preventDefault();
@@ -97,22 +93,22 @@ export default {
 
             list.push(value);
             this[name] = "";
-
-            this.generate();
         },
-        generate(){
-            this.domains = [];
+        destroy(index, list){
+            list.splice(index, 1);
+        }
+    },
+    computed: {
+        domains(){
+            const domains = [];
 
             for(const index in this.prefixes){
                 const prefix = this.prefixes[index];
 
-                this.sufixes.forEach(sufix => this.domains.push(`${prefix}${sufix}`));
+                this.sufixes.forEach(sufix => domains.push(`${prefix}${sufix}`));
             }
-        },
-        destroy(index, list){
-            list.splice(index, 1);
 
-            this.generate();
+            return domains;
         }
     }
 };
