@@ -5,23 +5,44 @@
             <h1 class="app__title">fullbranas <i aria-hidden="true" class="fa fa-tint"></i></h1>
             <p class="app__text">name generators with NodeJS, GraphQL and VueJS.</p>
         </div>
+
         <div class="app__content">
             <div class="app__container">
                 <div class="w-100 app__card">
                     <h2 class="app__card-title">prefixes ({{ prefixes.length }})</h2>
-                    <input type="text" class="form-control" aria-label="prefix" placeholder="input a prefix">
+
+                    <form class="input-group" v-on:submit="add($event, prefixes, 'prefix')">
+                        <input type="text" v-model="prefix" class="form-control" aria-label="prefix" placeholder="input a prefix">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" aria-label="add" type="submit">
+                                <i aria-hidden="true" class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </form>
+
                     <ul class="card app__list">
                         <li v-for="prefix in prefixes" v-bind:key="prefix" class="card"><span class="card-body">{{ prefix }}</span></li>
                     </ul>
                 </div>
+
                 <div class="w-100 app__card">
                     <h2 class="app__card-title">sufixes ({{ sufixes.length }})</h2>
-                    <input type="text" class="form-control" aria-label="sufix" placeholder="input a sufix">
+
+                    <form class="input-group" v-on:submit="add($event, sufixes, 'sufix')">
+                        <input type="text" class="form-control" v-model="sufix" aria-label="sufix" placeholder="input a sufix">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" aria-label="add" type="submit">
+                                <i aria-hidden="true" class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </form>
+
                     <ul class="card app__list">
                         <li v-for="sufix in sufixes" v-bind:key="sufix" class="card"><span class="card-body">{{ sufix }}</span></li>
                     </ul>
                 </div>
             </div>
+
             <div class="app__container">
                 <div class="w-100 app__card">
                     <h2 class="app__card-title">domains ({{ domains.length }})</h2>
@@ -42,11 +63,25 @@ export default {
 	name: "App",
 	data(){
 		return {
+            prefix: "",
+            sufix: "",
 			prefixes: ["air", "light"],
 			sufixes: ["car", "ball"],
 			domains: ["aircar", "lightball"]
 		};
-	}
+	},
+	methods: {
+		add(event, list, name){
+            event.preventDefault();
+
+            const value = this[name];
+
+            if(!value) return;
+
+            list.push(value);
+            this[name] = "";
+        }
+    }
 };
 </script>
 

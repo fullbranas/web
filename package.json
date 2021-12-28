@@ -36,8 +36,8 @@
     },
     "rules": {
       "quotes": ["error", "double"],
-      "indent": ["error", "tab"],
-      "semi": ["error", "always"]
+      "semi": ["error", "always"],
+      "no-debugger": "warn"
     }
   },
   "browserslist": [
