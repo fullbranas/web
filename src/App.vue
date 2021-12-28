@@ -21,7 +21,14 @@
                     </form>
 
                     <ul class="card app__list">
-                        <li v-for="prefix in prefixes" v-bind:key="prefix" class="card"><span class="card-body">{{ prefix }}</span></li>
+                        <li v-for="(prefix, index) in prefixes" v-bind:key="prefix" class="card">
+                            <span class="card-body app__item">
+                                {{ prefix }}
+                                <button @click="destroy(index, prefixes)" class="btn btn-danger" aria-label="delete" type="button">
+                                    <i aria-hidden="true" class="fa fa-trash"></i>
+                                </button>
+                            </span>
+                        </li>
                     </ul>
                 </div>
 
@@ -38,7 +45,14 @@
                     </form>
 
                     <ul class="card app__list">
-                        <li v-for="sufix in sufixes" v-bind:key="sufix" class="card"><span class="card-body">{{ sufix }}</span></li>
+                        <li v-for="(sufix, index) in sufixes" v-bind:key="sufix" class="card">
+                            <span class="card-body app__item">
+                                {{ sufix }}
+                                <button @click="destroy(index, sufixes)" class="btn btn-danger" aria-label="delete" type="button">
+                                    <i aria-hidden="true" class="fa fa-trash"></i>
+                                </button>
+                            </span>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -67,9 +81,12 @@ export default {
             sufix: "",
 			prefixes: ["air", "light"],
 			sufixes: ["car", "ball"],
-			domains: ["aircar", "lightball"]
+			domains: []
 		};
 	},
+    created(){
+        this.generate();
+    },
 	methods: {
 		add(event, list, name){
             event.preventDefault();
@@ -80,6 +97,22 @@ export default {
 
             list.push(value);
             this[name] = "";
+
+            this.generate();
+        },
+        generate(){
+            this.domains = [];
+
+            for(const index in this.prefixes){
+                const prefix = this.prefixes[index];
+
+                this.sufixes.forEach(sufix => this.domains.push(`${prefix}${sufix}`));
+            }
+        },
+        destroy(index, list){
+            list.splice(index, 1);
+
+            this.generate();
         }
     }
 };
@@ -98,8 +131,15 @@ export default {
     }
 
     html, body, #app{
-        font-size: var(--space);
+        min-height: 100vh;
+    }
+
+    body, #app{
         height: 100%;
+    }
+
+    html, body, #app{
+        font-size: var(--space);
     }
 
     .app{
@@ -108,6 +148,7 @@ export default {
         flex-direction: column;
         row-gap: var(--double-space);
         height: 100%;
+        min-height: 100vh;
     }
 
     .app .app__header{
@@ -148,6 +189,7 @@ export default {
         background-color: var(--primary-opacity);
         padding: var(--double-space);
         row-gap: var(--double-space);
+        flex-grow: 1;
     }
 
     .app .app__container{
@@ -178,5 +220,11 @@ export default {
         display: flex;
         flex-direction: column;
         row-gap: var(--space);
+    }
+
+    .app .app__item{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 </style>
