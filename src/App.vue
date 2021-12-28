@@ -7,21 +7,23 @@
         </div>
         <div class="app__content">
             <div class="app__container">
-                <div class="w-100">
+                <div class="w-100 app__card">
                     <h2 class="app__card-title">prefixes ({{ prefixes.length }})</h2>
+                    <input type="text" class="form-control" aria-label="prefix" placeholder="input a prefix">
                     <ul class="card app__list">
                         <li v-for="prefix in prefixes" v-bind:key="prefix" class="card"><span class="card-body">{{ prefix }}</span></li>
                     </ul>
                 </div>
-                <div class="w-100">
+                <div class="w-100 app__card">
                     <h2 class="app__card-title">sufixes ({{ sufixes.length }})</h2>
+                    <input type="text" class="form-control" aria-label="sufix" placeholder="input a sufix">
                     <ul class="card app__list">
                         <li v-for="sufix in sufixes" v-bind:key="sufix" class="card"><span class="card-body">{{ sufix }}</span></li>
                     </ul>
                 </div>
             </div>
             <div class="app__container">
-                <div class="w-100">
+                <div class="w-100 app__card">
                     <h2 class="app__card-title">domains ({{ domains.length }})</h2>
                     <ul class="card app__list">
                         <li v-for="domain in domains" v-bind:key="domain" class="card"><span class="card-body">{{ domain }}</span></li>
@@ -122,16 +124,24 @@ export default {
     }
 
     .app .app__list{
-        padding: var(--double-space);
+        padding: 0;
         margin: 0;
         display: flex;
         flex-direction: column;
+        background-color: transparent;
+        border: none;
         row-gap: var(--half-space);
         width: 100%;
     }
 
     .app .app__card-title{
         font-size: 2rem;
-        margin-bottom: var(--half-space);
+        margin: 0;
+    }
+
+    .app .app__card{
+        display: flex;
+        flex-direction: column;
+        row-gap: var(--space);
     }
 </style>
