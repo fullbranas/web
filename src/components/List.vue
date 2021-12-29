@@ -4,7 +4,7 @@
             <span class="card-body list__item">
                 {{ domain ? item.name : item }}
 
-                <a v-if="domain" v-bind:href="item.link" target="_blank" class="btn btn-info" aria-label="shopping">
+                <a v-if="domain" v-bind:href="item.link" target="_blank" class="btn btn-info" rel="noopener" aria-label="shopping">
                     <i aria-hidden="true" class="fa fa-shopping-cart"></i>
                 </a>
 
