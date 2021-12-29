@@ -13,16 +13,7 @@
 
                     <Create label="prefix" v-on:add="add(prefixes, $event)"></Create>
 
-                    <ul class="card app__list">
-                        <li v-for="(prefix, index) in prefixes" v-bind:key="prefix" class="card">
-                            <span class="card-body app__item">
-                                {{ prefix }}
-                                <button @click="destroy(index, prefixes)" class="btn btn-danger" aria-label="delete" type="button">
-                                    <i aria-hidden="true" class="fa fa-trash"></i>
-                                </button>
-                            </span>
-                        </li>
-                    </ul>
+                    <List v-bind:domain="false" v-bind:items="prefixes" v-on:destroy="destroy($event, prefixes)"></List>
                 </div>
 
                 <div class="w-100 app__card">
@@ -30,16 +21,7 @@
 
                     <Create label="sufix" v-on:add="add(sufixes, $event)"></Create>
 
-                    <ul class="card app__list">
-                        <li v-for="(sufix, index) in sufixes" v-bind:key="sufix" class="card">
-                            <span class="card-body app__item">
-                                {{ sufix }}
-                                <button @click="destroy(index, sufixes)" class="btn btn-danger" aria-label="delete" type="button">
-                                    <i aria-hidden="true" class="fa fa-trash"></i>
-                                </button>
-                            </span>
-                        </li>
-                    </ul>
+                    <List v-bind:domain="false" v-bind:items="sufixes" v-on:destroy="destroy($event, sufixes)"></List>
                 </div>
             </div>
 
@@ -47,16 +29,7 @@
                 <div class="w-100 app__card">
                     <Title v-bind:list="domains" title="domains"></Title>
 
-                    <ul class="card app__list">
-                        <li v-for="domain in domains" v-bind:key="domain.name" class="card">
-                            <span class="card-body app__item">
-                                {{ domain.name }}
-                                <a v-bind:href="domain.link" target="_blank" class="btn btn-info" aria-label="shopping">
-                                    <i aria-hidden="true" class="fa fa-shopping-cart"></i>
-                                </a>
-                            </span>
-                        </li>
-                    </ul>
+                    <List v-bind:domain="true" v-bind:items="domains"></List>
                 </div>
             </div>
         </div>
@@ -68,12 +41,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.min.css";
 import Create from "./components/Create";
 import Title from "./components/Title";
+import List from "./components/List";
 
 export default {
 	name: "App",
     components: {
         Create,
-        Title
+        Title,
+        List
     },
     data(){
 		return {
@@ -192,26 +167,9 @@ export default {
         column-gap: var(--double-space);
     }
 
-    .app .app__list{
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        background-color: transparent;
-        border: none;
-        row-gap: var(--half-space);
-        width: 100%;
-    }
-
     .app .app__card{
         display: flex;
         flex-direction: column;
         row-gap: var(--space);
-    }
-
-    .app .app__item{
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
     }
 </style>
