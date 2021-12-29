@@ -11,14 +11,7 @@
                 <div class="w-100 app__card">
                     <h2 class="app__card-title">prefixes ({{ prefixes.length }})</h2>
 
-                    <form class="input-group" v-on:submit="add($event, prefixes, 'prefix')">
-                        <input type="text" v-model="prefix" class="form-control" aria-label="prefix" placeholder="input a prefix">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" aria-label="add" type="submit">
-                                <i aria-hidden="true" class="fa fa-plus"></i>
-                            </button>
-                        </div>
-                    </form>
+                    <Create label="prefix" v-on:add="add(prefixes, $event)"></Create>
 
                     <ul class="card app__list">
                         <li v-for="(prefix, index) in prefixes" v-bind:key="prefix" class="card">
@@ -35,14 +28,7 @@
                 <div class="w-100 app__card">
                     <h2 class="app__card-title">sufixes ({{ sufixes.length }})</h2>
 
-                    <form class="input-group" v-on:submit="add($event, sufixes, 'sufix')">
-                        <input type="text" class="form-control" v-model="sufix" aria-label="sufix" placeholder="input a sufix">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" aria-label="add" type="submit">
-                                <i aria-hidden="true" class="fa fa-plus"></i>
-                            </button>
-                        </div>
-                    </form>
+                    <Create label="sufix" v-on:add="add(sufixes, $event)"></Create>
 
                     <ul class="card app__list">
                         <li v-for="(sufix, index) in sufixes" v-bind:key="sufix" class="card">
@@ -79,10 +65,14 @@
 <script>
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.min.css";
+import Create from "./components/Create";
 
 export default {
 	name: "App",
-	data(){
+    components: {
+        Create
+    },
+    data(){
 		return {
             prefix: "",
             sufix: "",
@@ -91,15 +81,8 @@ export default {
 		};
 	},
 	methods: {
-		add(event, list, name){
-            event.preventDefault();
-
-            const value = this[name];
-
-            if(!value) return;
-
+		add(list, value){
             list.push(value);
-            this[name] = "";
         },
         destroy(index, list){
             list.splice(index, 1);
