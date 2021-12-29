@@ -9,7 +9,7 @@
         <div class="app__content">
             <div class="app__container">
                 <div class="w-100 app__card">
-                    <h2 class="app__card-title">prefixes ({{ prefixes.length }})</h2>
+                    <Title v-bind:list="prefixes" title="prefixes"></Title>
 
                     <Create label="prefix" v-on:add="add(prefixes, $event)"></Create>
 
@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="w-100 app__card">
-                    <h2 class="app__card-title">sufixes ({{ sufixes.length }})</h2>
+                    <Title v-bind:list="sufixes" title="sufixes"></Title>
 
                     <Create label="sufix" v-on:add="add(sufixes, $event)"></Create>
 
@@ -45,7 +45,8 @@
 
             <div class="app__container">
                 <div class="w-100 app__card">
-                    <h2 class="app__card-title">domains ({{ domains.length }})</h2>
+                    <Title v-bind:list="domains" title="domains"></Title>
+
                     <ul class="card app__list">
                         <li v-for="domain in domains" v-bind:key="domain.name" class="card">
                             <span class="card-body app__item">
@@ -66,16 +67,16 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.min.css";
 import Create from "./components/Create";
+import Title from "./components/Title";
 
 export default {
 	name: "App",
     components: {
-        Create
+        Create,
+        Title
     },
     data(){
 		return {
-            prefix: "",
-            sufix: "",
 			prefixes: ["air", "light"],
 			sufixes: ["car", "ball"]
 		};
@@ -200,11 +201,6 @@ export default {
         border: none;
         row-gap: var(--half-space);
         width: 100%;
-    }
-
-    .app .app__card-title{
-        font-size: 2rem;
-        margin: 0;
     }
 
     .app .app__card{
