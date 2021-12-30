@@ -46,6 +46,7 @@ import Create from "./components/Create";
 import Title from "./components/Title";
 import List from "./components/List";
 import { env } from "./env";
+import { KEYWORDS } from "./enums";
 
 export default {
 	name: "App",
@@ -68,12 +69,12 @@ export default {
                 data: {
                     query: `
                         {
-                            prefixes {
+                            prefixes: pieces(type: "${KEYWORDS.PREFIX}") {
                                 id,
                                 text,
                                 type
                             },
-                            sufixes {
+                            sufixes: pieces(type: "${KEYWORDS.SUFIX}") {
                                 text
                             }
                         }
