@@ -39,9 +39,13 @@
 <script>
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.min.css";
+import axios from "axios";
+import HttpMethodsEnum from "http-methods-enum";
+
 import Create from "./components/Create";
 import Title from "./components/Title";
 import List from "./components/List";
+import { env } from "./env";
 
 export default {
 	name: "App",
@@ -52,16 +56,48 @@ export default {
     },
     data(){
 		return {
-			prefixes: ["air", "light"],
-			sufixes: ["car", "ball"]
+			prefixes: [],
+			sufixes: []
 		};
 	},
-	methods: {
+    async created(){
+        try{
+            const response = await axios({
+                url: env.API_URL,
+                method: HttpMethodsEnum.POST,
+                data: {
+                    query: `
+                        {
+                            prefixes {
+                                id,
+                                text,
+                                type
+                            },
+                            sufixes {
+                                text
+                            }
+                        }
+                    `
+                }
+            });
+
+            const { prefixes, sufixes } = response.data.data;
+
+            this.prefixes = this.onlyTexts(prefixes);
+            this.sufixes = this.onlyTexts(sufixes);
+        } catch(error){
+            console.error(error);
+        }
+    },
+    methods: {
 		add(list, value){
             list.push(value);
         },
         destroy(index, list){
             list.splice(index, 1);
+        },
+        onlyTexts(pieceOfDomains){
+            return pieceOfDomains.map(({ text }) => text);
         }
     },
     computed: {
