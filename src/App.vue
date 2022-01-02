@@ -104,13 +104,13 @@ export default {
                     data: {
                         query: `
                             mutation{
-                                delete(id: ${id})
+                                deleted: delete(id: ${id})
                             }
                         `
                     }
                 });
 
-                if(response.data.data.delete) this.get();
+                if(response.data.data.deleted) this.get();
             } catch(error){
                 console.error(error);
 
