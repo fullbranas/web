@@ -63,7 +63,8 @@ export default {
 		};
 	},
     created(){
-        this.get();
+        this.get(KEYWORDS.PREFIX);
+        this.get(KEYWORDS.SUFIX);
     },
     methods: {
 		async add(list, text, type){
@@ -87,7 +88,7 @@ export default {
                     }
                 });
 
-                this.get();
+                this.get(type);
             } catch(error){
                 console.error(error);
 
@@ -96,7 +97,7 @@ export default {
         },
         async destroy(index, list){
             try{
-                const { id } = list[index];
+                const { id, type } = list[index];
 
                 const response = await axios({
                     url: env.API_URL,
@@ -110,36 +111,32 @@ export default {
                     }
                 });
 
-                if(response.data.data.deleted) this.get();
+                if(response.data.data.deleted) this.get(type);
             } catch(error){
                 console.error(error);
 
                 list.splice(index, 1);
             }
         },
-        async get(){
+        async get(type){
             try{
+                const listName = `${type}es`;
+
                 const response = await axios({
                     url: env.API_URL,
                     method: HttpMethodsEnum.POST,
                     data: {
                         query: `
                             {
-                                prefixes: pieces(type: "${KEYWORDS.PREFIX}") {
+                                ${listName}: pieces(type: "${type}") {
                                     id, text, type
-                                },
-                                sufixes: pieces(type: "${KEYWORDS.SUFIX}") {
-                                    text, id
                                 }
                             }
                         `
                     }
                 });
 
-                const { prefixes, sufixes } = response.data.data;
-
-                this.prefixes = prefixes;
-                this.sufixes = sufixes;
+                this[listName] = response.data.data[listName];
             } catch(error){
                 console.error(error);
             }
