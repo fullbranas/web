@@ -3,7 +3,7 @@
         <div class="app__header">
             <img class="app__image" src="./assets/logo.jpg" alt="fullbranas logo">
             <h1 class="app__title">fullbranas <i aria-hidden="true" class="fa fa-tint"></i></h1>
-            <p class="app__text">name generators with NodeJS, GraphQL and VueJS.</p>
+            <p class="app__text">name generators with NodeJS, GraphQL and VueJS (run API to work better).</p>
         </div>
 
         <div class="app__content">
@@ -59,12 +59,14 @@ export default {
     data(){
 		return {
 			prefixes: [],
-			sufixes: []
+			sufixes: [],
+            domains: []
 		};
 	},
-    created(){
-        this.get(KEYWORDS.PREFIX);
-        this.get(KEYWORDS.SUFIX);
+    async created(){
+        await this.get(KEYWORDS.PREFIX);
+        await this.get(KEYWORDS.SUFIX);
+        await this.generateDomains();
     },
     methods: {
 		async add(list, text, type){
@@ -88,7 +90,8 @@ export default {
                     }
                 });
 
-                this.get(type);
+                await this.get(type);
+                await this.generateDomains();
             } catch(error){
                 console.error(error);
 
@@ -111,7 +114,10 @@ export default {
                     }
                 });
 
-                if(response.data.data.deleted) this.get(type);
+                if(response.data.data.deleted){
+                    await this.get(type);
+                    await this.generateDomains();
+                }
             } catch(error){
                 console.error(error);
 
@@ -140,24 +146,25 @@ export default {
             } catch(error){
                 console.error(error);
             }
-        }
-    },
-    computed: {
-        domains(){
-            const domains = [];
-
-            for(const index in this.prefixes){
-                const prefix = this.prefixes[index].text;
-
-                this.sufixes.forEach(sufix => {
-                    const name = `${prefix}${sufix.text}`;
-                    const link = `https://checkout.hostgator.com.br/?a=add&sld=${name}&tld=.com.br&domaincycle=1&pid=5&billingcycle=annually&promocode=PRATODAHORA35HG&titan=1&titanSource=1`;
-
-                    domains.push({ name, link });
+        },
+        async generateDomains(){
+            try{
+                const response = await axios({
+                    url: env.API_URL,
+                    method: HttpMethodsEnum.POST,
+                    data: {
+                        query: `
+                            mutation{
+                                domains{ name, link }
+                            }
+                        `
+                    }
                 });
-            }
 
-            return domains;
+                this.domains = response.data.data.domains;
+            } catch(error){
+                console.error(error);
+            }
         }
     }
 };
