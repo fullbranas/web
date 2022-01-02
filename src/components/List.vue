@@ -4,9 +4,13 @@
             <span class="card-body list__item">
                 {{ domain ? item.name : item.text }}
 
-                <a v-if="domain" v-bind:href="item.link" target="_blank" class="btn btn-info" rel="noopener" aria-label="shopping">
-                    <i aria-hidden="true" class="fa fa-shopping-cart"></i>
-                </a>
+                <span v-if="domain">
+                    <a v-if="item.available" v-bind:href="item.link" target="_blank" class="btn btn-info" rel="noopener" aria-label="shopping">
+                        <i aria-hidden="true" class="fa fa-shopping-cart"></i>
+                    </a>
+
+                    <span v-else class="badge bg-danger">already registered</span>
+                </span>
 
                 <button v-else @click="destroy(index)" class="btn btn-danger" aria-label="delete" type="button">
                     <i aria-hidden="true" class="fa fa-trash"></i>
