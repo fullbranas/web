@@ -41,6 +41,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.min.css";
 import axios from "axios";
 import HttpMethodsEnum from "http-methods-enum";
+import { v4 } from "uuid";
 
 import Create from "./components/Create";
 import Title from "./components/Title";
@@ -90,7 +91,7 @@ export default {
             } catch(error){
                 console.error(error);
 
-                list.push(text);
+                list.push({ text, type, id: v4() });
             }
         },
         async destroy(index, list){
