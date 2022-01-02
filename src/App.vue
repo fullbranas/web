@@ -17,11 +17,11 @@
                 </div>
 
                 <div class="w-100 app__card">
-                    <Title v-bind:list="sufixes" title="sufixes"></Title>
+                    <Title v-bind:list="suffixes" title="suffixes"></Title>
 
-                    <Create label="sufix" v-on:add="add(sufixes, $event, 'sufix')"></Create>
+                    <Create label="suffix" v-on:add="add(suffixes, $event, 'suffix')"></Create>
 
-                    <List v-bind:domain="false" v-bind:items="sufixes" v-on:destroy="destroy($event, sufixes)"></List>
+                    <List v-bind:domain="false" v-bind:items="suffixes" v-on:destroy="destroy($event, suffixes)"></List>
                 </div>
             </div>
 
@@ -59,13 +59,13 @@ export default {
     data(){
 		return {
 			prefixes: [],
-			sufixes: [],
+			suffixes: [],
             domains: []
 		};
 	},
     async created(){
         await this.get(KEYWORDS.PREFIX);
-        await this.get(KEYWORDS.SUFIX);
+        await this.get(KEYWORDS.SUFFIX);
         await this.generateDomains();
     },
     methods: {
@@ -155,7 +155,7 @@ export default {
                     data: {
                         query: `
                             mutation{
-                                domains{ name, link }
+                                domains{ name, link, available }
                             }
                         `
                     }
