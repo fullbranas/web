@@ -11,7 +11,7 @@
                 <div class="w-100 app__card">
                     <Title v-bind:list="prefixes" title="prefixes"></Title>
 
-                    <Create label="prefix" v-on:add="add(prefixes, $event)"></Create>
+                    <Create label="prefix" v-on:add="add(prefixes, $event, 'prefix')"></Create>
 
                     <List v-bind:domain="false" v-bind:items="prefixes" v-on:destroy="destroy($event, prefixes)"></List>
                 </div>
@@ -19,7 +19,7 @@
                 <div class="w-100 app__card">
                     <Title v-bind:list="sufixes" title="sufixes"></Title>
 
-                    <Create label="sufix" v-on:add="add(sufixes, $event)"></Create>
+                    <Create label="sufix" v-on:add="add(sufixes, $event, 'sufix')"></Create>
 
                     <List v-bind:domain="false" v-bind:items="sufixes" v-on:destroy="destroy($event, sufixes)"></List>
                 </div>
@@ -61,44 +61,87 @@ export default {
 			sufixes: []
 		};
 	},
-    async created(){
-        try{
-            const response = await axios({
-                url: env.API_URL,
-                method: HttpMethodsEnum.POST,
-                data: {
-                    query: `
-                        {
-                            prefixes: pieces(type: "${KEYWORDS.PREFIX}") {
-                                id,
-                                text,
-                                type
-                            },
-                            sufixes: pieces(type: "${KEYWORDS.SUFIX}") {
-                                text
-                            }
-                        }
-                    `
-                }
-            });
-
-            const { prefixes, sufixes } = response.data.data;
-
-            this.prefixes = this.onlyTexts(prefixes);
-            this.sufixes = this.onlyTexts(sufixes);
-        } catch(error){
-            console.error(error);
-        }
+    created(){
+        this.get();
     },
     methods: {
-		add(list, value){
-            list.push(value);
+		async add(list, text, type){
+            try {
+                await axios({
+                    url: env.API_URL,
+                    method: HttpMethodsEnum.POST,
+                    data: {
+                        query: `
+                            mutation($item: PieceOfDomainInput){
+                                save(item: $item){
+                                    id, type, text
+                                }
+                            }
+                        `,
+                        variables: {
+                            item: {
+                                type, text
+                            }
+                        }
+                    }
+                });
+
+                this.get();
+            } catch(error){
+                console.error(error);
+
+                list.push(text);
+            }
         },
-        destroy(index, list){
-            list.splice(index, 1);
+        async destroy(index, list){
+            try{
+                const { id } = list[index];
+
+                const response = await axios({
+                    url: env.API_URL,
+                    method: HttpMethodsEnum.POST,
+                    data: {
+                        query: `
+                            mutation{
+                                delete(id: ${id})
+                            }
+                        `
+                    }
+                });
+
+                if(response.data.data.delete) this.get();
+            } catch(error){
+                console.error(error);
+
+                list.splice(index, 1);
+            }
         },
-        onlyTexts(pieceOfDomains){
-            return pieceOfDomains.map(({ text }) => text);
+        async get(){
+            try{
+                const response = await axios({
+                    url: env.API_URL,
+                    method: HttpMethodsEnum.POST,
+                    data: {
+                        query: `
+                            {
+                                prefixes: pieces(type: "${KEYWORDS.PREFIX}") {
+                                    id, text, type
+                                },
+                                sufixes: pieces(type: "${KEYWORDS.SUFIX}") {
+                                    text, id
+                                }
+                            }
+                        `
+                    }
+                });
+
+                const { prefixes, sufixes } = response.data.data;
+
+                this.prefixes = prefixes;
+                this.sufixes = sufixes;
+            } catch(error){
+                console.error(error);
+            }
         }
     },
     computed: {
@@ -106,10 +149,10 @@ export default {
             const domains = [];
 
             for(const index in this.prefixes){
-                const prefix = this.prefixes[index];
+                const prefix = this.prefixes[index].text;
 
                 this.sufixes.forEach(sufix => {
-                    const name = `${prefix}${sufix}`;
+                    const name = `${prefix}${sufix.text}`;
                     const link = `https://checkout.hostgator.com.br/?a=add&sld=${name}&tld=.com.br&domaincycle=1&pid=5&billingcycle=annually&promocode=PRATODAHORA35HG&titan=1&titanSource=1`;
 
                     domains.push({ name, link });

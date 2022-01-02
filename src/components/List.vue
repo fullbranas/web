@@ -1,8 +1,8 @@
 <template>
     <ul class="card list">
-        <li v-for="(item, index) in items" v-bind:key="domain ? item.name : item" class="card">
+        <li v-for="(item, index) in items" v-bind:key="domain ? item.name : item.id" class="card">
             <span class="card-body list__item">
-                {{ domain ? item.name : item }}
+                {{ domain ? item.name : item.text }}
 
                 <a v-if="domain" v-bind:href="item.link" target="_blank" class="btn btn-info" rel="noopener" aria-label="shopping">
                     <i aria-hidden="true" class="fa fa-shopping-cart"></i>
