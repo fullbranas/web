@@ -1,4 +1,18 @@
 import { createApp } from "vue";
-import App from "./App.vue";
+import { createWebHistory, createRouter } from "vue-router";
 
-createApp(App).mount("#app");
+import App from "./App";
+import Root from "./Root";
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes: [
+        { path: "/", component: App },
+        { path: "/:catchAll(.*)", redirect: "/" }
+    ]
+});
+
+const app = createApp(Root);
+
+app.use(router);
+app.mount("#app");
