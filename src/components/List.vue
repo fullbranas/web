@@ -5,9 +5,15 @@
                 {{ domain ? item.name : item.text }}
 
                 <span v-if="domain">
-                    <a v-if="item.available" v-bind:href="item.link" target="_blank" class="btn btn-info" rel="noopener" aria-label="shopping">
-                        <i aria-hidden="true" class="fa fa-shopping-cart"></i>
-                    </a>
+                    <span v-if="item.available" class="list__domain-actions">
+                        <button class="btn btn-secondary" @click="openDomain(item)" aria-label="domain details">
+                            <i aria-hidden="true" class="fa fa-info-circle"></i>
+                        </button>
+
+                        <a v-bind:href="item.link" target="_blank" class="btn btn-info" rel="noopener" aria-label="shopping">
+                            <i aria-hidden="true" class="fa fa-shopping-cart"></i>
+                        </a>
+                    </span>
 
                     <span v-else class="badge bg-danger">already registered</span>
                 </span>
@@ -27,6 +33,9 @@ export default {
     methods: {
         destroy(index){
             this.$emit("destroy", index);
+        },
+        openDomain(domain){
+            this.$router.push({ path: `/domains/${domain.name}` });
         }
     }
 };
@@ -48,5 +57,11 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
+    }
+
+    .list .list__domain-actions{
+        display: flex;
+        align-items: center;
+        column-gap: var(--space);
     }
 </style>
